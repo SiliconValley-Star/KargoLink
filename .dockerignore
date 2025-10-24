@@ -1,0 +1,158 @@
+# Node.js
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Snowpack dependency directory (https://snowpack.dev/)
+web_modules/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Temporary folders
+tmp/
+temp/
+
+# Logs
+logs
+*.log
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Git
+.git
+.gitignore
+README.md
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.travis.yml
+
+# Documentation
+docs/
+*.md
+
+# Test files
+tests/
+test/
+__tests__/
+*.test.*
+*.spec.*
+
+# Build outputs
+build/
+dist/
+
+# Development files
+src/**/*.test.*
+src/**/*.spec.*
+packages/*/tests/
+packages/*/test/
+
+# Mobile specific
+packages/mobile/ios/
+packages/mobile/android/
+packages/mobile/.expo/
+packages/mobile/expo-env.d.ts
+
+# Admin build files
+packages/admin/dist/
+packages/admin/build/
+
+# Backend build files
+packages/backend/dist/
+packages/backend/build/
+
+# Shared build files
+packages/shared/dist/
+packages/shared/build/
+
+# Prisma
+packages/backend/prisma/dev.db*
+packages/backend/prisma/*.db*
+
+# Uploads (will be handled by volumes)
+packages/backend/uploads/
+
+# Coverage
+coverage/
+
+# Misc
+*.tgz
+*.tar.gz

@@ -1,0 +1,6 @@
+packages:
+  - 'packages/backend'
+  - 'packages/website'
+  - 'packages/admin'
+  - 'packages/mobile'
+  - 'packages/shared'

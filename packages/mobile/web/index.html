@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CargoLink Mobile Web</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        .logo {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .status {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        .features {
+            text-align: left;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .feature {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .refresh {
+            background: #2196F3;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .refresh:hover {
+            background: #1976D2;
+        }
+        @media (max-width: 480px) {
+            .container { padding: 20px; }
+            .title { font-size: 24px; }
+            .logo { font-size: 36px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🚛</div>
+        <h1 class="title">🔥 CargoLink Mobile - HOT RELOAD TEST!</h1>
+        <p class="subtitle">🚀 React Native Web Versiyonu - CANLI GÜNCELLEME!</p>
+        
+        <div class="status">🎯 HOT RELOAD ÇALIŞIYOR! - DEĞİŞİKLİK YAPILDI!</div>
+        
+        <div class="features">
+            <div class="feature">✅ Hot Reload aktif</div>
+            <div class="feature">✅ React Native Web desteği</div>
+            <div class="feature">✅ Cross-platform uyumluluk</div>
+            <div class="feature">✅ Responsive tasarım</div>
+        </div>
+        
+        <button class="refresh" onclick="location.reload()">🔄 Yenile</button>
+        
+        <div style="margin-top: 20px; font-size: 14px; color: #999;">
+            Port: 19006 | Live Reload: Aktif
+        </div>
+    </div>
+
+    <script>
+        // Hot reload simulation
+        console.log('🚀 CargoLink Mobile Web loaded successfully!');
+        console.log('🔄 Hot Reload: Active');
+        
+        // Auto refresh check every 30 seconds
+        setInterval(() => {
+            console.log('⚡ Hot Reload: Checking for updates...');
+        }, 30000);
+    </script>
+</body>
+</html>

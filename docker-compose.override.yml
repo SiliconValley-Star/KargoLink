@@ -1,0 +1,142 @@
+# Development overrides for docker-compose.yml
+version: '3.8'
+
+services:
+  # PostgreSQL Database - Development
+  postgres:
+    environment:
+      POSTGRES_DB: cargolink_dev
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_password
+    volumes:
+      - ./packages/backend/prisma/migrations:/migrations
+      - ./docker/postgres/dev-init:/docker-entrypoint-initdb.d
+    ports:
+      - "5433:5432"  # Different port to avoid conflicts
+
+  # Redis Cache - Development
+  redis:
+    command: redis-server --appendonly yes
+    ports:
+      - "6380:6379"  # Different port to avoid conflicts
+
+  # Backend API - Development
+  backend:
+    build:
+      target: development
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://dev_user:dev_password@postgres:5432/cargolink_dev
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: dev-jwt-secret-key-not-for-production
+      JWT_REFRESH_SECRET: dev-refresh-secret-key-not-for-production
+      LOG_LEVEL: debug
+      ENABLE_SWAGGER: "true"
+      ENABLE_SEEDING: "true"
+      CORS_ORIGIN: "http://localhost:3000,http://localhost:3002,http://localhost:19006"
+    volumes:
+      - ./packages/backend/src:/app/packages/backend/src
+      - ./packages/backend/prisma:/app/packages/backend/prisma
+      - ./packages/shared:/app/packages/shared
+      - ./node_modules:/app/node_modules
+      - backend_node_modules:/app/packages/backend/node_modules
+    command: ["pnpm", "run", "dev"]
+    ports:
+      - "3001:3001"
+      - "9229:9229"  # Debug port for Node.js debugging
+
+  # Admin Panel - Development
+  admin:
+    build:
+      target: development
+      args:
+        VITE_API_URL: http://localhost:3001
+    volumes:
+      - ./packages/admin/src:/app/packages/admin/src
+      - ./packages/admin/public:/app/packages/admin/public
+      - ./packages/shared:/app/packages/shared
+      - admin_node_modules:/app/packages/admin/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:3001
+      - VITE_APP_NAME=CargoLink Admin (Dev)
+    command: ["pnpm", "run", "dev", "--host", "0.0.0.0"]
+    ports:
+      - "3002:3002"
+
+  # Development Tools Container
+  dev-tools:
+    image: node:18-alpine
+    container_name: cargolink-dev-tools
+    working_dir: /app
+    volumes:
+      - .:/app
+      - dev_tools_node_modules:/app/node_modules
+    networks:
+      - cargolink-network
+    command: tail -f /dev/null  # Keep container running
+    profiles:
+      - dev-tools
+
+  # Database Admin (pgAdmin)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: cargolink-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@cargolink.local
+      PGADMIN_DEFAULT_PASSWORD: pgadmin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json
+    ports:
+      - "8080:80"
+    networks:
+      - cargolink-network
+    depends_on:
+      - postgres
+    profiles:
+      - dev-tools
+
+  # Redis Admin (Redis Commander)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: cargolink-redis-commander
+    restart: unless-stopped
+    environment:
+      REDIS_HOSTS: local:redis:6379
+    ports:
+      - "8081:8081"
+    networks:
+      - cargolink-network
+    depends_on:
+      - redis
+    profiles:
+      - dev-tools
+
+  # MailHog for email testing
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: cargolink-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"  # SMTP port
+      - "8025:8025"  # Web UI port
+    networks:
+      - cargolink-network
+    profiles:
+      - dev-tools
+
+volumes:
+  backend_node_modules:
+    driver: local
+    name: cargolink-backend-node-modules
+  admin_node_modules:
+    driver: local
+    name: cargolink-admin-node-modules
+  dev_tools_node_modules:
+    driver: local
+    name: cargolink-dev-tools-node-modules
+  pgadmin_data:
+    driver: local
+    name: cargolink-pgadmin-data

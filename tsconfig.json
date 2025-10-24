@@ -1,0 +1,69 @@
+{
+  "compilerOptions": {
+    // Target and module settings
+    "target": "ES2022",
+    "module": "commonjs",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "moduleResolution": "node",
+
+    // Output settings
+    "outDir": "./dist",
+    "rootDir": "./",
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+
+    // Type checking
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+
+    // Module resolution
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+
+    // Advanced options
+    "skipLibCheck": true,
+    "allowJs": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    // Path mapping for monorepo
+    "baseUrl": ".",
+    "paths": {
+      "@cargolink/shared/*": ["packages/shared/src/*"],
+      "@cargolink/backend/*": ["packages/backend/src/*"],
+      "@cargolink/mobile/*": ["packages/mobile/src/*"],
+      "@cargolink/admin/*": ["packages/admin/src/*"]
+    }
+  },
+  "include": [
+    "packages/*/src/**/*",
+    "packages/*/types/**/*",
+    "scripts/**/*",
+    "*.js",
+    "*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    "packages/*/dist",
+    "packages/*/build",
+    "packages/*/node_modules",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ],
+  "references": [
+    { "path": "./packages/shared" },
+    { "path": "./packages/backend" }
+  ]
+}

@@ -1,0 +1,71 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CargoErrorCode = exports.TrackingStatus = exports.CargoPackageType = exports.CargoServiceType = exports.CargoServiceProvider = void 0;
+var CargoServiceProvider;
+(function (CargoServiceProvider) {
+    CargoServiceProvider["PTT"] = "ptt";
+    CargoServiceProvider["YURTICI"] = "yurtici";
+    CargoServiceProvider["ARAS"] = "aras";
+    CargoServiceProvider["MNG"] = "mng";
+    CargoServiceProvider["SURAT"] = "surat";
+    CargoServiceProvider["UPS"] = "ups";
+    CargoServiceProvider["DHL"] = "dhl";
+    CargoServiceProvider["FEDEX"] = "fedex";
+    CargoServiceProvider["TNT"] = "tnt";
+    CargoServiceProvider["CEVA"] = "ceva";
+    CargoServiceProvider["TNT_EXPRESS"] = "tnt_express";
+    CargoServiceProvider["SF_EXPRESS"] = "sf_express";
+    CargoServiceProvider["DB_SCHENKER"] = "db_schenker";
+    CargoServiceProvider["MAERSK"] = "maersk";
+    CargoServiceProvider["JAPAN_POST"] = "japan_post";
+    CargoServiceProvider["ROYAL_MAIL"] = "royal_mail";
+    CargoServiceProvider["HERMES"] = "hermes";
+    CargoServiceProvider["DPKG"] = "dpkg";
+    CargoServiceProvider["CHRONOPOST"] = "chronopost";
+    CargoServiceProvider["CORREOS"] = "correos";
+})(CargoServiceProvider || (exports.CargoServiceProvider = CargoServiceProvider = {}));
+var CargoServiceType;
+(function (CargoServiceType) {
+    CargoServiceType["STANDARD"] = "standard";
+    CargoServiceType["EXPRESS"] = "express";
+    CargoServiceType["OVERNIGHT"] = "overnight";
+    CargoServiceType["ECONOMY"] = "economy";
+    CargoServiceType["PREMIUM"] = "premium";
+})(CargoServiceType || (exports.CargoServiceType = CargoServiceType = {}));
+var CargoPackageType;
+(function (CargoPackageType) {
+    CargoPackageType["DOCUMENT"] = "document";
+    CargoPackageType["PACKAGE"] = "package";
+    CargoPackageType["ENVELOPE"] = "envelope";
+    CargoPackageType["BOX"] = "box";
+    CargoPackageType["TUBE"] = "tube";
+    CargoPackageType["PAK"] = "pak";
+})(CargoPackageType || (exports.CargoPackageType = CargoPackageType = {}));
+var TrackingStatus;
+(function (TrackingStatus) {
+    TrackingStatus["CREATED"] = "created";
+    TrackingStatus["PICKED_UP"] = "picked_up";
+    TrackingStatus["IN_TRANSIT"] = "in_transit";
+    TrackingStatus["OUT_FOR_DELIVERY"] = "out_for_delivery";
+    TrackingStatus["DELIVERED"] = "delivered";
+    TrackingStatus["EXCEPTION"] = "exception";
+    TrackingStatus["RETURNED"] = "returned";
+})(TrackingStatus || (exports.TrackingStatus = TrackingStatus = {}));
+var CargoErrorCode;
+(function (CargoErrorCode) {
+    CargoErrorCode["CONNECTION_FAILED"] = "CONNECTION_FAILED";
+    CargoErrorCode["TIMEOUT"] = "TIMEOUT";
+    CargoErrorCode["RATE_LIMIT_EXCEEDED"] = "RATE_LIMIT_EXCEEDED";
+    CargoErrorCode["INVALID_CREDENTIALS"] = "INVALID_CREDENTIALS";
+    CargoErrorCode["API_KEY_EXPIRED"] = "API_KEY_EXPIRED";
+    CargoErrorCode["INVALID_ADDRESS"] = "INVALID_ADDRESS";
+    CargoErrorCode["UNSUPPORTED_SERVICE"] = "UNSUPPORTED_SERVICE";
+    CargoErrorCode["PACKAGE_TOO_HEAVY"] = "PACKAGE_TOO_HEAVY";
+    CargoErrorCode["PACKAGE_TOO_LARGE"] = "PACKAGE_TOO_LARGE";
+    CargoErrorCode["SERVICE_UNAVAILABLE"] = "SERVICE_UNAVAILABLE";
+    CargoErrorCode["NO_QUOTES_AVAILABLE"] = "NO_QUOTES_AVAILABLE";
+    CargoErrorCode["QUOTE_EXPIRED"] = "QUOTE_EXPIRED";
+    CargoErrorCode["UNKNOWN_ERROR"] = "UNKNOWN_ERROR";
+    CargoErrorCode["PARSING_ERROR"] = "PARSING_ERROR";
+})(CargoErrorCode || (exports.CargoErrorCode = CargoErrorCode = {}));
+//# sourceMappingURL=cargo-service.types.js.map

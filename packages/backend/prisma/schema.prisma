@@ -1,0 +1,1262 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// USER MANAGEMENT
+// ============================================================================
+
+model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  // Basic Information
+  email       String  @unique
+  phone       String  @unique
+  firstName   String
+  lastName    String
+  avatar      String?
+  birthDate   DateTime?
+  gender      String?
+
+  // Account Information
+  role                  String              @default("CUSTOMER")
+  accountType           String              @default("INDIVIDUAL")
+  status                String              @default("ACTIVE")
+  emailVerified         Boolean             @default(false)
+  phoneVerified         Boolean             @default(false)
+  emailVerifiedAt       DateTime?
+  phoneVerifiedAt       DateTime?
+
+  // Authentication
+  password              String
+  passwordChangedAt     DateTime?
+  lastLoginAt           DateTime?
+  lastActiveAt          DateTime?
+  lastLoginIP           String?
+  twoFactorEnabled      Boolean             @default(false)
+  twoFactorSecret       String?
+
+  // Verification
+  verificationStatus    String              @default("UNVERIFIED")
+  verificationDocuments String? // JSON array as string
+  verificationNotes     String?
+  verifiedAt            DateTime?
+  verifiedBy            String?
+
+  // Business Information
+  businessInfo          String? // JSON as string
+  carrierInfo           String? // JSON as string
+
+  // Preferences
+  preferences           String? // JSON as string
+  notificationSettings  String? // JSON as string
+
+  // Statistics
+  totalShipments        Int                 @default(0)
+  totalSpent            Float               @default(0)
+  rating                Float               @default(0)
+  reviewCount           Int                 @default(0)
+
+  // Referral
+  referralCode          String              @unique @default(cuid())
+  referredBy            String?
+  referredByUser        User?               @relation("UserReferral", fields: [referredBy], references: [id])
+  referrals             User[]              @relation("UserReferral")
+  referralCount         Int                 @default(0)
+
+  // Subscription
+  subscriptionPlan      String?
+  subscriptionExpiresAt DateTime?
+
+  // Compliance
+  gdprConsent               Boolean         @default(false)
+  marketingConsent          Boolean         @default(false)
+  termsAcceptedAt           DateTime
+  privacyPolicyAcceptedAt   DateTime
+
+  // Relations
+  addresses             Address[]
+  devices               Device[]
+  sessions              Session[]
+  userSessions          UserSession[]       @relation("UserSessions")
+  apiKeys               ApiKey[]
+  
+  // Shipment Relations
+  sentShipments         Shipment[]          @relation("ShipmentSender")
+  receivedShipments     Shipment[]          @relation("ShipmentRecipient")
+  carrierShipments      Shipment[]          @relation("ShipmentCarrier")
+  quotes                Quote[]
+
+  // Payment Relations
+  payments              Payment[]
+  paymentMethods        PaymentMethod[]
+  wallet                Wallet?
+
+  // Review Relations
+  givenReviews          Review[]            @relation("ReviewGiver")
+  receivedReviews       Review[]            @relation("ReviewReceiver")
+
+  // Admin Relations
+  verifiedUsers         User[]              @relation("UserVerifier")
+  verifier              User?               @relation("UserVerifier", fields: [verifiedBy], references: [id])
+
+  // Activity
+  activities            UserActivity[]
+  notifications         Notification[]
+
+  // File Storage Relations
+  uploadedFiles         File[]              @relation
+  fileShares            FileShare[]         @relation("FileSharesGiven")
+  receivedFileShares    FileShare[]         @relation("FileSharesReceived")
+  fileVersions          FileVersion[]
+  fileAccessLogs        FileAccessLog[]
+
+  @@map("users")
+}
+
+model Address {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  // User
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Address Information
+  title         String
+  firstName     String
+  lastName      String
+  company       String?
+  addressLine1  String
+  addressLine2  String?
+  city          String
+  district      String
+  neighborhood  String?
+  postalCode    String
+  country       String    @default("TR")
+  phone         String
+  email         String?
+
+  // Coordinates
+  latitude      Float?
+  longitude     Float?
+
+  // Settings
+  isDefault     Boolean   @default(false)
+  isActive      Boolean   @default(true)
+
+  // Relations
+  pickupShipments   Shipment[]  @relation("PickupAddress")
+  deliveryShipments Shipment[]  @relation("DeliveryAddress")
+
+  @@map("addresses")
+}
+
+model Device {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  // User
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Device Information
+  deviceId    String
+  platform    String
+  version     String
+  pushToken   String?
+  userAgent   String?
+  ipAddress   String?
+
+  // Status
+  isActive    Boolean   @default(true)
+  lastUsedAt  DateTime?
+
+  @@unique([userId, deviceId])
+  @@map("devices")
+}
+
+model Session {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // User
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Session Information
+  token       String    @unique
+  deviceInfo  String    // JSON as string
+  ipAddress   String
+  userAgent   String?
+  lastActivity DateTime @default(now())
+  expiresAt   DateTime
+  isActive    Boolean   @default(true)
+
+  @@map("sessions")
+}
+
+model UserSession {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // User
+  userId        String
+  user          User      @relation("UserSessions", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Session Information
+  accessToken   String?
+  refreshToken  String    @unique
+  deviceInfo    String    // JSON as string
+  ipAddress     String
+  userAgent     String?
+  lastActivity  DateTime  @default(now())
+  expiresAt     DateTime
+  isActive      Boolean   @default(true)
+
+  @@map("user_sessions")
+}
+
+model ApiKey {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // User
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // API Key Information
+  key         String    @unique
+  name        String
+  permissions String   // JSON array as string
+  isActive    Boolean   @default(true)
+  lastUsedAt  DateTime?
+  expiresAt   DateTime?
+
+  @@map("api_keys")
+}
+
+model UserActivity {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+
+  // User
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Activity Information
+  action      String
+  description String
+  metadata    String?  // JSON as string
+  ipAddress   String?
+  userAgent   String?
+
+  @@map("user_activities")
+}
+
+// ============================================================================
+// CARGO COMPANIES & CARRIERS
+// ============================================================================
+
+model CargoCompany {
+  id              String    @id @default(cuid())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  // Basic Information
+  name            String
+  legalName       String?
+  logo            String?
+  website         String?
+  description     String?
+
+  // Company Type & Status
+  type            String            @default("REGIONAL")
+  status          String            @default("ACTIVE")
+  isVerified      Boolean           @default(false)
+  verifiedAt      DateTime?
+  verifiedBy      String?
+
+  // Contact Information
+  contacts        String  // JSON array as string
+  addresses       String  // JSON array as string
+  headquarters    String  // JSON as string
+
+  // Business Information
+  taxNumber       String            @unique
+  taxOffice       String
+  tradeRegistryNumber String?
+  establishmentDate   DateTime?
+  employeeCount       Int?
+
+  // Service Information
+  specializations     String  // JSON array as string
+  serviceTypes        String  // JSON array as string
+  serviceAreas        String  // JSON array as string
+  businessHours       String  // JSON as string
+
+  // Integration
+  integrationType     String  @default("API")
+  apiConfig           String? // JSON as string
+
+  // Fleet Information
+  driverCount         Int?
+  
+  // Pricing
+  commissionRate      Float             @default(0.05)
+
+  // Performance Metrics
+  rating              Float             @default(0)
+  reviewCount         Int               @default(0)
+  totalShipments      Int               @default(0)
+  onTimeDeliveryRate  Float             @default(0)
+  avgResponseTime     Int               @default(0)
+  avgTransitTime      Int               @default(0)
+
+  // Financial
+  creditLimit         Float?
+  currentBalance      Float             @default(0)
+  paymentTerms        Int               @default(30)
+
+  // Compliance
+  licenses            String  // JSON array as string
+  certifications      String  // JSON array as string
+  insurance           String  // JSON as string
+
+  // Platform Integration
+  isActive            Boolean           @default(true)
+  joinedAt            DateTime          @default(now())
+  lastActiveAt        DateTime?
+
+  // Agreement
+  agreementVersion    String
+  agreementAcceptedAt DateTime
+
+  // Settlement
+  settlementFrequency String              @default("MONTHLY")
+  bankAccount         String?             // JSON as string
+
+  // Relations
+  vehicles            Vehicle[]
+  quotes              Quote[]
+  shipments           Shipment[]        @relation("CargoCompanyShipments")
+  pricingRules        PricingRule[]
+  reviews             Review[]          @relation("CargoCompanyReviews")
+  payouts             Payout[]
+
+  @@map("cargo_companies")
+}
+
+model Vehicle {
+  id                    String    @id @default(cuid())
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  deletedAt             DateTime?
+
+  // Owner
+  cargoCompanyId        String?
+  cargoCompany          CargoCompany? @relation(fields: [cargoCompanyId], references: [id])
+
+  // Vehicle Information
+  type                  String
+  brand                 String
+  model                 String
+  year                  Int
+  plateNumber           String      @unique
+  
+  // Capacity
+  capacity              String      // JSON as string - weight, volume, dimensions
+
+  // Features
+  features              String      // JSON array as string
+
+  // Documents
+  insuranceNumber       String
+  insuranceExpiry       DateTime
+  inspectionExpiry      DateTime
+
+  // Status
+  isActive              Boolean     @default(true)
+
+  // Media
+  images                String      // JSON array as string
+
+  @@map("vehicles")
+}
+
+model PricingRule {
+  id                    String    @id @default(cuid())
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Company
+  cargoCompanyId        String
+  cargoCompany          CargoCompany @relation(fields: [cargoCompanyId], references: [id], onDelete: Cascade)
+
+  // Rule Information
+  name                  String
+  serviceType           String
+  specializations       String      // JSON array as string
+
+  // Geographic Scope
+  fromCities            String      // JSON array as string
+  toCities              String      // JSON array as string
+  distance              String?     // JSON as string - min, max km
+
+  // Pricing Structure
+  weightRanges          String      // JSON array as string - Array of weight-based pricing
+  volumeRanges          String      @default("[]")  // JSON array as string - Array of volume-based pricing
+  fuelSurcharge         Float?
+  insuranceRate         Float?      // Percentage of declared value
+
+  // Special Service Costs
+  specialServiceCosts   String      // JSON as string
+
+  // Time-based Modifiers
+  deliveryTimeModifiers String?     // JSON as string
+  seasonalModifiers     String      @default("[]")  // JSON array as string
+
+  // Validity
+  isActive              Boolean     @default(true)
+  validFrom             DateTime
+  validUntil            DateTime?
+
+  @@map("pricing_rules")
+}
+
+// ============================================================================
+// SHIPMENTS & LOGISTICS
+// ============================================================================
+
+model Shipment {
+  id                    String    @id @default(cuid())
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  deletedAt             DateTime?
+
+  // Tracking
+  trackingNumber        String      @unique
+  reference             String?
+
+  // Parties
+  senderId              String
+  sender                User        @relation("ShipmentSender", fields: [senderId], references: [id])
+  recipientId           String?
+  recipient             User?       @relation("ShipmentRecipient", fields: [recipientId], references: [id])
+
+  // Addresses
+  pickupAddressId       String
+  pickupAddress         Address     @relation("PickupAddress", fields: [pickupAddressId], references: [id])
+  deliveryAddressId     String
+  deliveryAddress       Address     @relation("DeliveryAddress", fields: [deliveryAddressId], references: [id])
+
+  // Shipment Details
+  packages              String      // JSON array as string - Array of package information
+  totalWeight           Float
+  totalValue            Float       @default(0)
+  currency              String      @default("TRY")
+  category              String      @default("GENERAL")
+  serviceType           String      @default("STANDARD")
+  specialServices       String      // JSON as string - Special service flags and details
+
+  // Timing
+  pickupPreference      String      // JSON as string - Date and time preferences
+  deliveryPreference    String      // JSON as string - Date and time preferences
+  estimatedPickupDate   DateTime?
+  estimatedDeliveryDate DateTime?
+  actualPickupDate      DateTime?
+  actualDeliveryDate    DateTime?
+
+  // Carrier & Quote
+  selectedCarrierId     String?
+  selectedCarrier       User?       @relation("ShipmentCarrier", fields: [selectedCarrierId], references: [id])
+  selectedCargoCompanyId String?
+  selectedCargoCompany  CargoCompany? @relation("CargoCompanyShipments", fields: [selectedCargoCompanyId], references: [id])
+  selectedQuoteId       String?
+  selectedQuote         Quote?      @relation("SelectedQuote", fields: [selectedQuoteId], references: [id])
+
+  // Status & Tracking
+  status                String      @default("DRAFT")
+
+  // Payment
+  totalCost             Float?
+  paymentStatus         String      @default("PENDING")
+  paymentId             String?
+  paidAt                DateTime?
+
+  // Customer Service
+  instructions          String?
+  notes                 String?
+  customerNotes         String?
+  internalNotes         String?
+
+  // Documents
+  invoices              String      // JSON array as string - File URLs
+  packingList           String?
+  customsDeclaration    String?
+  otherDocuments        String      // JSON array as string
+
+  // Insurance & Claims
+  insuranceValue        Float?
+  insurancePolicyNumber String?
+  claimId               String?
+
+  // Ratings & Reviews
+  customerRating        Int?
+  carrierRating         Int?
+  customerReview        String?
+  carrierReview         String?
+
+  // Cancellation & Returns
+  cancellationReason    String?
+  cancelledBy           String?
+  cancelledAt           DateTime?
+  returnReason          String?
+  returnedAt            DateTime?
+
+  // Customs
+  requiresCustoms       Boolean     @default(false)
+  customsValue          Float?
+  commodityCode         String?
+  exportLicense         String?
+
+  // Relations
+  quotes                Quote[]     @relation("ShipmentQuotes")
+  trackingEvents        TrackingEvent[]
+  payments              Payment[]
+  deliveryAttempts      DeliveryAttempt[]
+  notifications         ShipmentNotification[]
+  reviews               Review[]
+
+  @@map("shipments")
+}
+
+model Quote {
+  id                    String    @id @default(cuid())
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Shipment
+  shipmentId            String
+  shipment              Shipment    @relation("ShipmentQuotes", fields: [shipmentId], references: [id], onDelete: Cascade)
+
+  // Carrier/Company
+  carrierId             String?
+  carrier               User?       @relation(fields: [carrierId], references: [id])
+  cargoCompanyId        String?
+  cargoCompany          CargoCompany? @relation(fields: [cargoCompanyId], references: [id])
+
+  // Quote Details
+  baseCost              Float       @default(0)
+  currency              String      @default("TRY")
+  additionalCosts       String      // JSON as string - insurance, fuel, services, taxes
+  totalCost             Float       @default(0)
+
+  // Service Details
+  serviceType           String      @default("STANDARD")
+  estimatedPickupDate   DateTime
+  estimatedDeliveryDate DateTime
+  transitDays           Int
+
+  // Terms
+  termsAndConditions    String?
+  validUntil            DateTime
+  notes                 String?
+
+  // Status
+  status                String      @default("PENDING")
+  respondedAt           DateTime?
+
+  // Features
+  trackingIncluded      Boolean     @default(true)
+  insuranceIncluded     Boolean     @default(false)
+  signatureRequired     Boolean     @default(false)
+
+  // Relations
+  selectedShipments     Shipment[]  @relation("SelectedQuote")
+
+  @@map("quotes")
+}
+
+model TrackingEvent {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+
+  // Shipment
+  shipmentId    String
+  shipment      Shipment  @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+
+  // Event Details
+  status        String
+  title         String
+  description   String
+  location      String?   // JSON as string - name, coordinates
+  timestamp     DateTime  @default(now())
+
+  // Media & Documentation
+  images        String    // JSON array as string - URLs
+  signature     String?   // URL
+  contactPerson String?   // JSON as string - contact information
+
+  // Metadata
+  metadata      String?   // JSON as string
+
+  @@map("tracking_events")
+}
+
+model DeliveryAttempt {
+  id                String    @id @default(cuid())
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Shipment
+  shipmentId        String
+  shipment          Shipment  @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+
+  // Attempt Details
+  attemptNumber     Int
+  scheduledDate     DateTime
+  actualDate        DateTime?
+  status            String
+  failureReason     String?
+  recipientNote     String?
+  carrierNote       String?
+
+  // Documentation
+  signature         String?   // File URL
+  photos            String    // JSON array as string - File URLs
+  location          String?   // JSON as string - coordinates
+
+  // Contact Attempts
+  contactAttempts   String    // JSON array as string - Array of contact attempt details
+
+  @@map("delivery_attempts")
+}
+
+// ============================================================================
+// PAYMENTS & FINANCIAL
+// ============================================================================
+
+model PaymentMethod {
+  id              String    @id @default(cuid())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  // User
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Payment Method Details
+  type            String
+  token           String    // Tokenized payment method
+  maskedNumber    String?   // For cards: **** **** **** 1234
+  brand           String?   // visa, mastercard, etc.
+  expiryMonth     Int?
+  expiryYear      Int?
+  holderName      String?
+  nickname        String?
+  isDefault       Boolean   @default(false)
+  lastUsedAt      DateTime?
+
+  // Provider Information
+  providerId      String
+  providerToken   String?
+
+  // Billing Address
+  billingAddress  String?   // JSON as string
+
+  // Relations
+  payments        Payment[]
+
+  @@map("payment_methods")
+}
+
+model Payment {
+  id                      String    @id @default(cuid())
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+
+  // Transaction Details
+  transactionId           String    @unique
+  referenceNumber         String?
+
+  // Related Entities
+  shipmentId              String?
+  shipment                Shipment? @relation(fields: [shipmentId], references: [id])
+  userId                  String
+  user                    User      @relation(fields: [userId], references: [id])
+
+  // Amount & Currency
+  amount                  Float     @default(0)
+  currency                String    @default("TRY")
+  originalAmount          Float?
+  exchangeRate            Float?
+
+  // Payment Details
+  method                  String
+  provider                String
+  status                  String    @default("PENDING")
+
+  // Provider Information
+  providerTransactionId   String?
+  providerReferenceId     String?
+  providerStatus          String?
+
+  // Payment Method
+  paymentMethodId         String?
+  paymentMethod           PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
+
+  // Installment
+  installmentCount        Int?
+  installmentAmount       Float?
+
+  // Fees & Costs
+  fees                    String    // JSON as string - platform, provider, bank, total fees
+  grossAmount             Float     @default(0)
+  netAmount               Float     @default(0)
+
+  // Timing
+  paidAt                  DateTime?
+  processedAt             DateTime?
+  settledAt               DateTime?
+  expiresAt               DateTime?
+
+  // Security
+  ipAddress               String?
+  userAgent               String?
+
+  // Customer Information
+  billingAddress          String?   // JSON as string
+
+  // Refunds
+  refunds                 PaymentRefund[]
+  refundableAmount        Float     @default(0)
+
+  // Fraud & Security
+  riskScore               Float?
+  fraudCheck              String?   // JSON as string
+  threeDS                 String?   // JSON as string
+
+  // Additional Information
+  description             String?
+  metadata                String?   // JSON as string
+
+  // Failure Information
+  failureReason           String?
+  failureCode             String?
+
+  // Reconciliation
+  reconciled              Boolean   @default(false)
+  reconciledAt            DateTime?
+  bankStatementReference  String?
+
+  @@map("payments")
+}
+
+model PaymentRefund {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Payment
+  paymentId     String
+  payment       Payment   @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  // Refund Details
+  amount        Float     @default(0)
+  currency      String    @default("TRY")
+  reason        String
+  status        String    @default("PENDING")
+
+  // Provider Information
+  providerRefundId String?
+
+  // Timing
+  requestedAt   DateTime  @default(now())
+  processedAt   DateTime?
+  completedAt   DateTime?
+
+  // Initiator
+  initiatedBy   String
+  autoRefund    Boolean   @default(false)
+
+  // Additional
+  notes         String?
+  metadata      String?   // JSON as string
+
+  @@map("payment_refunds")
+}
+
+model Wallet {
+  id              String    @id @default(cuid())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // User
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Balance
+  balance         Float     @default(0)
+  currency        String    @default("TRY")
+
+  // Limits
+  dailySpendLimit   Float   @default(1000)
+  monthlySpendLimit Float   @default(10000)
+
+  // Status
+  isActive        Boolean   @default(true)
+  isFrozen        Boolean   @default(false)
+  frozenReason    String?
+  frozenAt        DateTime?
+
+  // Verification
+  isVerified      Boolean   @default(false)
+  verifiedAt      DateTime?
+  verificationLevel String  @default("basic")
+
+  // Relations
+  transactions    WalletTransaction[]
+
+  @@map("wallets")
+}
+
+model WalletTransaction {
+  id              String    @id @default(cuid())
+  createdAt       DateTime  @default(now())
+
+  // Wallet
+  walletId        String
+  wallet          Wallet    @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  userId          String
+
+  // Transaction Details
+  type            String
+  amount          Float     @default(0)
+  currency        String    @default("TRY")
+  balanceAfter    Float     @default(0)
+
+  // Related Entities
+  paymentId       String?
+  shipmentId      String?
+
+  // Description
+  description     String
+  reference       String?
+
+  // Status
+  status          String    @default("COMPLETED")
+  processedAt     DateTime?
+
+  // Metadata
+  metadata        String?   // JSON as string
+
+  @@map("wallet_transactions")
+}
+
+model Payout {
+  id                    String    @id @default(cuid())
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Carrier/Company
+  cargoCompanyId        String
+  cargoCompany          CargoCompany @relation(fields: [cargoCompanyId], references: [id])
+
+  // Payout Details
+  amount                Float     @default(0)
+  currency              String    @default("TRY")
+  status                String    @default("PENDING")
+
+  // Period
+  periodStart           DateTime
+  periodEnd             DateTime
+
+  // Breakdown
+  breakdown             String    // JSON as string - grossEarnings, platformCommission, fees, adjustments, netAmount
+
+  // Bank Details
+  bankAccount           String    // JSON as string - accountHolder, bankName, iban, swift
+
+  // Provider Details
+  provider              String
+  providerPayoutId      String?
+
+  // Timing
+  requestedAt           DateTime  @default(now())
+  processedAt           DateTime?
+  completedAt           DateTime?
+  expectedAt            DateTime?
+
+  // Failure
+  failureReason         String?
+
+  // Documentation
+  invoiceUrl            String?
+  receiptUrl            String?
+
+  // Related Shipments
+  shipmentIds           String    // JSON array as string
+
+  @@map("payouts")
+}
+
+// ============================================================================
+// REVIEWS & RATINGS
+// ============================================================================
+
+model Review {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Parties
+  giverId       String
+  giver         User      @relation("ReviewGiver", fields: [giverId], references: [id])
+  receiverId    String
+  receiver      User      @relation("ReviewReceiver", fields: [receiverId], references: [id])
+
+  // Related Entities
+  shipmentId    String?
+  shipment      Shipment? @relation(fields: [shipmentId], references: [id])
+  cargoCompanyId String?
+  cargoCompany  CargoCompany? @relation("CargoCompanyReviews", fields: [cargoCompanyId], references: [id])
+
+  // Review Content
+  rating        Int       // 1-5
+  title         String?
+  comment       String?
+
+  // Specific Ratings
+  ratings       String?   // JSON as string - communication, punctuality, handling, value
+
+  // Response
+  response      String?   // JSON as string - message, respondedAt, respondedBy
+
+  // Status
+  isVerified    Boolean   @default(false)
+  isPublic      Boolean   @default(true)
+  helpfulCount  Int       @default(0)
+
+  @@map("reviews")
+}
+
+// ============================================================================
+// NOTIFICATIONS
+// ============================================================================
+
+model Notification {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // User
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Notification Content
+  type          String
+  title         String
+  message       String
+  data          String?   // JSON as string
+
+  // Delivery Channels
+  channels      String    // JSON array as string
+
+  // Status
+  read          Boolean   @default(false)
+  readAt        DateTime?
+  clicked       Boolean   @default(false)
+  clickedAt     DateTime?
+
+  // Delivery
+  sentAt        DateTime?
+  deliveryStatus String?  // JSON as string - Status per channel
+
+  @@map("notifications")
+}
+
+model ShipmentNotification {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+
+  // Shipment
+  shipmentId    String
+  shipment      Shipment  @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+
+  // User
+  userId        String
+
+  // Notification Content
+  type          String
+  title         String
+  message       String
+
+  // Delivery Channels
+  channels      String    // JSON array as string
+
+  // Status
+  sentAt        DateTime?
+  readAt        DateTime?
+  clickedAt     DateTime?
+
+  @@map("shipment_notifications")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+// SQLite does not support enums - these are converted to string constraints in application logic
+// Available values for string fields:
+// UserRole: CUSTOMER, CARRIER, ADMIN, MODERATOR, SUPPORT, PARTNER
+// AccountType: INDIVIDUAL, BUSINESS
+// Gender: MALE, FEMALE, OTHER
+// UserStatus: ACTIVE, INACTIVE, PENDING, SUSPENDED, DELETED
+// VerificationStatus: UNVERIFIED, PENDING, VERIFIED, REJECTED
+// DevicePlatform: IOS, ANDROID, WEB
+// CargoCompanyType: ENTERPRISE, REGIONAL, LOCAL, FREELANCE
+// CompanyStatus: ACTIVE, INACTIVE, PENDING, SUSPENDED, DELETED
+// IntegrationType: API, MANUAL, HYBRID
+// CarrierSpecialization: GENERAL, COLD_CHAIN, FRAGILE, HAZARDOUS, OVERSIZED, EXPRESS, INTERNATIONAL, DOCUMENTS, FOOD, PHARMACEUTICAL
+// ServiceType: STANDARD, EXPRESS, SAME_DAY, NEXT_DAY, SCHEDULED, WHITE_GLOVE
+// SettlementFrequency: DAILY, WEEKLY, MONTHLY
+// VehicleType: MOTORCYCLE, VAN, TRUCK, TRAILER, REFRIGERATED, OTHER
+// VehicleFeature: REFRIGERATED, HEATED, AIR_SUSPENSION, TAIL_LIFT, GPS_TRACKING, SECURITY_CAMERA, TEMPERATURE_MONITORING, FRAGILE_HANDLING, HAZMAT_CERTIFIED
+// CargoCategory: GENERAL, FOOD, PHARMACEUTICAL, ELECTRONICS, TEXTILE, AUTOMOTIVE, CONSTRUCTION, CHEMICAL, HAZARDOUS, FRAGILE, FROZEN, FRESH, LIVESTOCK, ARTWORK, JEWELRY, DOCUMENTS
+// ShipmentStatus: DRAFT, PENDING_QUOTES, QUOTES_RECEIVED, CARRIER_SELECTED, PAYMENT_PENDING, PAYMENT_COMPLETED, PICKUP_SCHEDULED, PICKED_UP, IN_TRANSIT, OUT_FOR_DELIVERY, DELIVERED, DELIVERY_FAILED, RETURNED, CANCELLED, DISPUTE, REFUNDED
+// QuoteStatus: PENDING, ACCEPTED, REJECTED, EXPIRED
+// DeliveryAttemptStatus: SCHEDULED, SUCCESSFUL, FAILED, RESCHEDULED
+// PaymentMethodType: CREDIT_CARD, DEBIT_CARD, BANK_TRANSFER, MOBILE_PAYMENT, DIGITAL_WALLET, CASH_ON_DELIVERY, CORPORATE_ACCOUNT, INSTALLMENT, CRYPTO
+// PaymentProvider: IYZICO, PAYTR, STRIPE, PAYPAL, MASTERPASS, BKM_EXPRESS, GARANTI_PAY, AKBANK_PAY, YAPAY, HALKBANK_PAY
+// PaymentStatus: PENDING, PROCESSING, COMPLETED, FAILED, CANCELLED, REFUNDED, PARTIALLY_REFUNDED, DISPUTED, EXPIRED
+// WalletTransactionType: DEPOSIT, WITHDRAWAL, PAYMENT, REFUND, FEE, COMMISSION
+// TransactionStatus: PENDING, COMPLETED, FAILED, CANCELLED
+// PayoutStatus: PENDING, PROCESSING, COMPLETED, FAILED, CANCELLED
+// NotificationType: INFO, SUCCESS, WARNING, ERROR, PROMOTION, SYSTEM
+// ShipmentNotificationType: PICKUP_SCHEDULED, PICKED_UP, IN_TRANSIT, OUT_FOR_DELIVERY, DELIVERED, DELIVERY_FAILED, DELAYED, CANCELLED
+// NotificationChannel: PUSH, EMAIL, SMS, IN_APP
+
+// ============================================================================
+// FILE STORAGE
+// ============================================================================
+
+model File {
+  id              String    @id @default(cuid())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  // File Information
+  key             String    @unique
+  originalName    String
+  fileName        String
+  mimeType        String
+  size            BigInt
+  hash            String    @unique
+
+  // File Classification
+  type            String    @default("OTHER")
+  category        String?
+  tags            String    // JSON array as string
+
+  // Storage Information
+  provider        String    @default("AWS_S3")
+  bucketName      String
+  path            String
+  url             String
+
+  // Access Control
+  isPublic        Boolean   @default(false)
+  accessLevel     String    @default("private")
+
+  // Processing
+  status          String    @default("ACTIVE")
+  processingStatus String?  // JSON as string
+
+  // Thumbnails & Variants
+  thumbnailKey    String?
+  thumbnailUrl    String?
+  variants        String    @default("{}")  // JSON as string
+
+  // Metadata
+  metadata        String    @default("{}")  // JSON as string
+  exifData        String?   // JSON as string
+  dimensions      String?   // JSON as string
+  duration        Int?
+
+  // Upload Information
+  uploadedById    String?
+  uploadedBy      User?     @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  uploadSource    String    @default("web")
+  uploadedAt      DateTime  @default(now())
+
+  // Usage Tracking
+  downloadCount   Int       @default(0)
+  lastAccessedAt  DateTime?
+
+  // Expiration & Cleanup
+  expiresAt       DateTime?
+  autoCleanup     Boolean   @default(false)
+
+  // Virus Scanning
+  virusScanStatus String?   @default("pending")
+  virusScanResult String?   // JSON as string
+  virusScanAt     DateTime?
+
+  // Relations
+  associations    FileAssociation[]
+  shares          FileShare[]
+  versions        FileVersion[]
+  accessLogs      FileAccessLog[]
+
+  @@map("files")
+}
+
+model FileAssociation {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+
+  // File
+  fileId        String
+  file          File      @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  // Associated Entity
+  entityType    String
+  entityId      String
+  fieldName     String?
+
+  // Association Metadata
+  purpose       String?
+  displayOrder  Int?      @default(0)
+  metadata      String    @default("{}")  // JSON as string
+
+  @@map("file_associations")
+}
+
+model FileShare {
+  id                String    @id @default(cuid())
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // File
+  fileId            String
+  file              File      @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  // Share Information
+  token             String    @unique
+  sharedById        String
+  sharedBy          User      @relation("FileSharesGiven", fields: [sharedById], references: [id])
+  sharedWithEmail   String?
+  sharedWithUserId  String?
+  sharedWithUser    User?     @relation("FileSharesReceived", fields: [sharedWithUserId], references: [id], onDelete: SetNull)
+
+  // Access Control
+  permissions       String    @default("[\"read\"]")  // JSON array as string
+  expiresAt         DateTime?
+  maxDownloads      Int?
+  downloadCount     Int       @default(0)
+
+  // Password Protection
+  password          String?
+  requiresPassword  Boolean   @default(false)
+
+  // Status
+  isActive          Boolean   @default(true)
+  lastAccessedAt    DateTime?
+
+  // Metadata
+  note              String?
+  metadata          String    @default("{}")  // JSON as string
+
+  @@map("file_shares")
+}
+
+model FileVersion {
+  id              String    @id @default(cuid())
+  createdAt       DateTime  @default(now())
+
+  // Original File
+  originalFileId  String
+  originalFile    File      @relation(fields: [originalFileId], references: [id], onDelete: Cascade)
+
+  // Version Information
+  versionNumber   Int       @default(1)
+  changelog       String?
+
+  // File Information
+  key             String
+  originalName    String
+  fileName        String
+  mimeType        String
+  size            BigInt
+  hash            String
+  url             String
+
+  // Processing
+  status          String    @default("ACTIVE")
+
+  // Upload Information
+  uploadedById    String?
+  uploadedBy      User?     @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  uploadedAt      DateTime  @default(now())
+
+  // Metadata
+  metadata        String    @default("{}")  // JSON as string
+
+  @@map("file_versions")
+}
+
+model FileAccessLog {
+  id              String    @id @default(cuid())
+  createdAt       DateTime  @default(now())
+
+  // File
+  fileId          String
+  file            File      @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  // User
+  userId          String?
+  user            User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  sessionId       String?
+
+  // Access Information
+  action          String
+  ipAddress       String?
+  userAgent       String?
+  referer         String?
+
+  // Response Information
+  responseStatus  Int?
+  bytesServed     BigInt?
+  duration        Int?
+
+  // Metadata
+  metadata        String    @default("{}")  // JSON as string
+
+  @@map("file_access_logs")
+}
+
+// FileStatus: UPLOADING, ACTIVE, PROCESSING, FAILED, DELETED
+// FileType: AVATAR, DOCUMENT, IMAGE, VIDEO, AUDIO, ARCHIVE, OTHER
+// StorageProvider: AWS_S3, GOOGLE_CLOUD, AZURE_BLOB, LOCAL

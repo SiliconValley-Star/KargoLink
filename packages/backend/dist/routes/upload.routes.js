@@ -1,0 +1,22 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const upload_controller_1 = require("../controllers/upload.controller");
+const auth_middleware_1 = require("../middleware/auth.middleware");
+const upload_middleware_1 = require("../middleware/upload.middleware");
+const router = (0, express_1.Router)();
+router.post('/single', auth_middleware_1.authRequired, upload_middleware_1.uploadMixed, upload_middleware_1.validateUploadedFiles, upload_controller_1.UploadController.uploadSingle);
+router.post('/multiple', auth_middleware_1.authRequired, upload_middleware_1.uploadImages, upload_middleware_1.validateUploadedFiles, upload_controller_1.UploadController.uploadMultiple);
+router.post('/avatar', auth_middleware_1.authRequired, upload_middleware_1.uploadAvatar, upload_middleware_1.validateUploadedFiles, upload_controller_1.UploadController.uploadAvatar);
+router.post('/document/:shipmentId', auth_middleware_1.authRequired, upload_middleware_1.uploadSingleDocument, upload_middleware_1.validateUploadedFiles, upload_controller_1.UploadController.uploadDocument);
+router.delete('/file/:key', auth_middleware_1.authRequired, upload_controller_1.UploadController.deleteFile);
+router.delete('/files', auth_middleware_1.authRequired, upload_controller_1.UploadController.deleteFiles);
+router.get('/info/:key', auth_middleware_1.authRequired, upload_controller_1.UploadController.getFileInfo);
+router.get('/signed-url/:key', auth_middleware_1.authRequired, upload_controller_1.UploadController.getSignedUrl);
+router.post('/generate-upload-url', auth_middleware_1.authRequired, upload_controller_1.UploadController.generateUploadUrl);
+router.post('/image', auth_middleware_1.authRequired, upload_middleware_1.uploadImages, upload_middleware_1.validateUploadedFiles, upload_controller_1.UploadController.uploadSingle);
+router.post('/gallery', auth_middleware_1.authRequired, upload_middleware_1.uploadImages, upload_middleware_1.validateUploadedFiles, upload_controller_1.UploadController.uploadMultiple);
+router.post('/pdf', auth_middleware_1.authRequired, upload_middleware_1.uploadSingleDocument, upload_middleware_1.validateUploadedFiles, upload_controller_1.UploadController.uploadSingle);
+router.post('/spreadsheet', auth_middleware_1.authRequired, upload_middleware_1.uploadSingleDocument, upload_middleware_1.validateUploadedFiles, upload_controller_1.UploadController.uploadSingle);
+exports.default = router;
+//# sourceMappingURL=upload.routes.js.map

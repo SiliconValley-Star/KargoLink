@@ -1,0 +1,24 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.notificationRoutes = void 0;
+const express_1 = require("express");
+const notification_controller_1 = require("../controllers/notification.controller");
+const auth_middleware_1 = require("../middleware/auth.middleware");
+const client_1 = require("@prisma/client");
+const router = (0, express_1.Router)();
+exports.notificationRoutes = router;
+const prisma = new client_1.PrismaClient();
+const notificationController = new notification_controller_1.NotificationController(prisma);
+router.post('/send', auth_middleware_1.adminRequired, notificationController.sendNotification);
+router.post('/send-bulk', auth_middleware_1.adminRequired, notificationController.sendBulkNotifications);
+router.get('/services/status', auth_middleware_1.adminRequired, notificationController.getServicesStatus);
+router.post('/email/send', auth_middleware_1.adminRequired, notificationController.sendEmail);
+router.post('/sms/send', auth_middleware_1.adminRequired, notificationController.sendSMS);
+router.post('/push/send', auth_middleware_1.adminRequired, notificationController.sendPushNotification);
+router.get('/user/:userId?', auth_middleware_1.authRequired, notificationController.getUserNotifications);
+router.get('/stats', auth_middleware_1.authRequired, notificationController.getNotificationStats);
+router.put('/preferences', auth_middleware_1.authRequired, notificationController.updatePreferences);
+router.patch('/:notificationId/read', auth_middleware_1.authRequired, notificationController.markAsRead);
+router.patch('/mark-all-read', auth_middleware_1.authRequired, notificationController.markAllAsRead);
+router.post('/device/register', auth_middleware_1.authRequired, notificationController.registerDeviceToken);
+//# sourceMappingURL=notification.routes.js.map

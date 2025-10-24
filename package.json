@@ -1,0 +1,141 @@
+{
+  "name": "cargolink-mvp",
+  "version": "1.0.0",
+  "description": "CargoLink MVP - Comprehensive logistics platform",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:admin\" \"npm run dev:website\"",
+    "dev:backend": "cd packages/backend && npm run dev",
+    "dev:admin": "cd packages/admin && npm run dev",
+    "dev:mobile": "cd packages/mobile && npm start",
+    "dev:website": "cd packages/website && npm run dev",
+    "dev:setup": "./scripts/setup-dev.sh",
+    
+    "build": "npm run build:shared && npm run build:backend && npm run build:admin && npm run build:website",
+    "build:shared": "cd packages/shared && npm run build",
+    "build:backend": "cd packages/backend && npm run build",
+    "build:admin": "cd packages/admin && npm run build",
+    "build:website": "cd packages/website && npm run build",
+    "build:mobile:ios": "cd packages/mobile && npm run build:ios",
+    "build:mobile:android": "cd packages/mobile && npm run build:android",
+    
+    "test": "npm run test:backend && npm run test:mobile && npm run test:admin && npm run test:website",
+    "test:coverage": "npm run test:backend:coverage && npm run test:mobile:coverage && npm run test:admin:coverage",
+    "test:backend": "cd packages/backend && npm run test",
+    "test:backend:coverage": "cd packages/backend && npm run test:coverage",
+    "test:mobile": "cd packages/mobile && npm run test",
+    "test:mobile:coverage": "cd packages/mobile && npm run test:coverage",
+    "test:admin": "cd packages/admin && npm run test",
+    "test:admin:coverage": "cd packages/admin && npm run test:coverage",
+    "test:website": "cd packages/website && npm run test",
+    "test:e2e": "npx playwright test",
+    "test:load": "k6 run tests/load/api-load-test.js",
+    
+    "lint": "npm run lint:backend && npm run lint:mobile && npm run lint:admin && npm run lint:website && npm run lint:shared",
+    "lint:fix": "npm run lint:backend:fix && npm run lint:mobile:fix && npm run lint:admin:fix && npm run lint:website:fix && npm run lint:shared:fix",
+    "lint:backend": "cd packages/backend && npm run lint",
+    "lint:backend:fix": "cd packages/backend && npm run lint:fix",
+    "lint:mobile": "cd packages/mobile && npm run lint",
+    "lint:mobile:fix": "cd packages/mobile && npm run lint:fix",
+    "lint:admin": "cd packages/admin && npm run lint",
+    "lint:admin:fix": "cd packages/admin && npm run lint:fix",
+    "lint:website": "cd packages/website && npm run lint",
+    "lint:website:fix": "cd packages/website && npm run lint:fix",
+    "lint:shared": "cd packages/shared && npm run lint",
+    "lint:shared:fix": "cd packages/shared && npm run lint:fix",
+    
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
+    "type-check": "npm run type-check:backend && npm run type-check:admin && npm run type-check:website && npm run type-check:mobile && npm run type-check:shared",
+    "type-check:backend": "cd packages/backend && npx tsc --noEmit",
+    "type-check:admin": "cd packages/admin && npx tsc --noEmit",
+    "type-check:website": "cd packages/website && npx tsc --noEmit",
+    "type-check:mobile": "cd packages/mobile && npx tsc --noEmit",
+    "type-check:shared": "cd packages/shared && npx tsc --noEmit",
+    
+    "db:migrate": "cd packages/backend && npx prisma migrate dev",
+    "db:seed": "cd packages/backend && npx prisma db seed",
+    "db:reset": "cd packages/backend && npx prisma migrate reset",
+    "db:studio": "cd packages/backend && npx prisma studio",
+    "db:generate": "cd packages/backend && npx prisma generate",
+    "db:push": "cd packages/backend && npx prisma db push",
+    
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:build": "docker-compose build",
+    "docker:dev": "docker-compose up -d --build",
+    "docker:prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build",
+    "docker:prod:stop": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml down",
+    "docker:clean": "docker-compose down -v && docker system prune -f",
+    
+    "security:audit": "npm audit --audit-level moderate",
+    "security:fix": "npm audit fix",
+    "analyze": "npm run analyze:website",
+    "analyze:website": "cd packages/website && npm run analyze",
+    
+    "deploy:staging": "./scripts/deploy-staging.sh",
+    "deploy:production": "./scripts/deploy-production.sh",
+    "deploy:rollback": "./scripts/rollback.sh",
+    
+    "clean": "rm -rf node_modules && rm -rf packages/*/node_modules",
+    "clean:build": "rm -rf packages/backend/dist && rm -rf packages/admin/build && rm -rf packages/website/.next && rm -rf packages/mobile/android/app/build && rm -rf packages/mobile/ios/build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "packages/backend/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "packages/mobile/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "packages/admin/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "packages/website/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "packages/shared/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.{md,json,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/cargolink-mvp.git"
+  },
+  "keywords": [
+    "logistics",
+    "cargo",
+    "shipping",
+    "react-native",
+    "nodejs",
+    "typescript",
+    "mvp"
+  ],
+  "author": "CargoLink Team",
+  "license": "MIT"
+}
