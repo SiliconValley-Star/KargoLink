@@ -5,3 +5,4 @@
 # 2025-10-24T16:38:02.073: docs: add initial README with project overview
 # 2025-10-25T09:11:24.339: chore: add docker-compose base configuration
 # 2025-10-25T11:44:58.712: chore: configure ESLint and Prettier for monorepo
+# 2025-10-25T15:03:17.447: chore: add commitlint and husky pre-commit hooks
