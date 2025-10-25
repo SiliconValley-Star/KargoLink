@@ -3,3 +3,4 @@
 # 2025-10-24T10:22:37.891: chore: add root package.json and workspace configuration
 # 2025-10-24T13:05:49.556: chore: add .gitignore, .env.example and project structure
 # 2025-10-24T16:38:02.073: docs: add initial README with project overview
+# 2025-10-25T09:11:24.339: chore: add docker-compose base configuration
