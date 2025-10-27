@@ -10,3 +10,4 @@
 # 2025-10-27T10:14:41.267: feat(backend): add basic health check endpoint
 # 2025-10-27T12:52:03.093: feat(shared): define core TypeScript interfaces for cargo and user
 # 2025-10-27T15:07:28.519: chore(backend): configure nodemon for development hot-reload
+# 2025-10-27T17:33:11.006: chore: update docker-compose with backend service
