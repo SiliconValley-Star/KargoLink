@@ -7,3 +7,4 @@
 # 2025-10-25T11:44:58.712: chore: configure ESLint and Prettier for monorepo
 # 2025-10-25T15:03:17.447: chore: add commitlint and husky pre-commit hooks
 # 2025-10-27T08:29:05.884: feat(backend): scaffold Express + TypeScript server
+# 2025-10-27T10:14:41.267: feat(backend): add basic health check endpoint
