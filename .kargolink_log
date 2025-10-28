@@ -14,3 +14,4 @@
 # 2025-10-28T09:03:47.781: feat(backend): implement JWT authentication middleware
 # 2025-10-28T11:26:19.334: feat(backend): add user registration and login endpoints
 # 2025-10-28T14:09:55.618: fix(backend): resolve bcrypt hashing async issue on registration
+# 2025-10-28T16:51:30.229: test(backend): add unit tests for auth middleware
