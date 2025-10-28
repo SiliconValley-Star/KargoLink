@@ -12,3 +12,4 @@
 # 2025-10-27T15:07:28.519: chore(backend): configure nodemon for development hot-reload
 # 2025-10-27T17:33:11.006: chore: update docker-compose with backend service
 # 2025-10-28T09:03:47.781: feat(backend): implement JWT authentication middleware
+# 2025-10-28T11:26:19.334: feat(backend): add user registration and login endpoints
