@@ -15,3 +15,4 @@
 # 2025-10-28T11:26:19.334: feat(backend): add user registration and login endpoints
 # 2025-10-28T14:09:55.618: fix(backend): resolve bcrypt hashing async issue on registration
 # 2025-10-28T16:51:30.229: test(backend): add unit tests for auth middleware
+# 2025-10-29T08:56:12.074: feat(backend): add SQLite database connection and config
