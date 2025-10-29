@@ -17,3 +17,4 @@
 # 2025-10-28T16:51:30.229: test(backend): add unit tests for auth middleware
 # 2025-10-29T08:56:12.074: feat(backend): add SQLite database connection and config
 # 2025-10-29T10:41:38.993: feat(backend): create initial database schema migrations
+# 2025-10-29T13:28:07.447: feat(backend): seed database with sample cargo and user data
