@@ -22,3 +22,4 @@
 # 2025-10-30T09:17:43.658: chore: system recovery after dev environment freeze
 # 2025-10-30T10:48:56.231: feat(backend): restore cargo CRUD route handlers
 # 2025-10-30T12:33:29.774: fix(shared): correct TypeScript strict mode type errors
+# 2025-10-30T14:55:18.109: feat(backend): add pagination to cargo list endpoint
