@@ -20,3 +20,4 @@
 # 2025-10-29T13:28:07.447: feat(backend): seed database with sample cargo and user data
 # 2025-10-29T15:59:24.812: fix(backend): handle database connection timeout gracefully
 # 2025-10-30T09:17:43.658: chore: system recovery after dev environment freeze
+# 2025-10-30T10:48:56.231: feat(backend): restore cargo CRUD route handlers
