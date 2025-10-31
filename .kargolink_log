@@ -24,3 +24,4 @@
 # 2025-10-30T12:33:29.774: fix(shared): correct TypeScript strict mode type errors
 # 2025-10-30T14:55:18.109: feat(backend): add pagination to cargo list endpoint
 # 2025-10-30T17:02:47.356: chore: update package-lock.json after dependency sync
+# 2025-10-31T08:38:22.513: feat(backend): add cargo assignment endpoint for drivers
