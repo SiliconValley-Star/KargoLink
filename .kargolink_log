@@ -26,3 +26,4 @@
 # 2025-10-30T17:02:47.356: chore: update package-lock.json after dependency sync
 # 2025-10-31T08:38:22.513: feat(backend): add cargo assignment endpoint for drivers
 # 2025-10-31T10:19:04.887: feat(backend): implement shipment status update flow
+# 2025-10-31T12:44:31.726: fix(backend): resolve race condition in concurrent status updates
