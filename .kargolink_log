@@ -29,3 +29,4 @@
 # 2025-10-31T12:44:31.726: fix(backend): resolve race condition in concurrent status updates
 # 2025-10-31T14:27:53.394: test(backend): add integration tests for cargo routes
 # 2025-10-31T16:55:08.047: chore: clean up debug console.log statements
+# 2025-11-01T10:02:47.628: fix(backend): correct validation on driver assignment payload
