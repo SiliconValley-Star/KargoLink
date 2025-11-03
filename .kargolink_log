@@ -32,3 +32,4 @@
 # 2025-11-01T10:02:47.628: fix(backend): correct validation on driver assignment payload
 # 2025-11-01T12:31:15.843: test(backend): improve test coverage for auth module
 # 2025-11-01T15:18:39.271: docs: update API endpoint documentation in README
+# 2025-11-03T08:21:07.934: feat(backend): implement real-time cargo tracking via WebSocket
