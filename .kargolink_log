@@ -34,3 +34,4 @@
 # 2025-11-01T15:18:39.271: docs: update API endpoint documentation in README
 # 2025-11-03T08:21:07.934: feat(backend): implement real-time cargo tracking via WebSocket
 # 2025-11-03T09:58:44.186: feat(backend): broadcast location updates to connected clients
+# 2025-11-03T11:37:19.502: feat(backend): add WebSocket authentication token validation
