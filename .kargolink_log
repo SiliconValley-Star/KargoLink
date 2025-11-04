@@ -39,3 +39,4 @@
 # 2025-11-03T15:02:58.029: chore: add ws dependency and update package.json
 # 2025-11-03T17:29:41.653: test(backend): add WebSocket connection tests
 # 2025-11-04T09:07:28.415: feat(backend): add express-rate-limit middleware
+# 2025-11-04T11:22:54.876: feat(backend): implement global error handler with structured logging
