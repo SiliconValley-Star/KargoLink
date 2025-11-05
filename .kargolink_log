@@ -46,3 +46,4 @@
 # 2025-11-05T10:31:47.169: feat(backend): add driver availability status endpoint
 # 2025-11-05T12:09:21.588: feat(backend): calculate estimated delivery time on assignment
 # 2025-11-05T14:38:05.924: fix(backend): fix off-by-one error in distance calculation
+# 2025-11-05T16:57:33.471: test(backend): add tests for driver assignment logic
