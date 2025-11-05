@@ -43,3 +43,4 @@
 # 2025-11-04T13:48:13.233: fix(backend): standardize error response format across routes
 # 2025-11-04T16:05:37.594: chore: configure winston logger for production environment
 # 2025-11-05T08:43:02.817: feat(backend): implement driver assignment algorithm
+# 2025-11-05T10:31:47.169: feat(backend): add driver availability status endpoint
