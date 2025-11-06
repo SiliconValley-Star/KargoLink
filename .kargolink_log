@@ -48,3 +48,4 @@
 # 2025-11-05T14:38:05.924: fix(backend): fix off-by-one error in distance calculation
 # 2025-11-05T16:57:33.471: test(backend): add tests for driver assignment logic
 # 2025-11-06T09:14:19.832: fix: address code review comments from self-review
+# 2025-11-06T11:46:52.157: refactor(backend): extract cargo helper functions to utils
