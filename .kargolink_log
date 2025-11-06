@@ -47,3 +47,4 @@
 # 2025-11-05T12:09:21.588: feat(backend): calculate estimated delivery time on assignment
 # 2025-11-05T14:38:05.924: fix(backend): fix off-by-one error in distance calculation
 # 2025-11-05T16:57:33.471: test(backend): add tests for driver assignment logic
+# 2025-11-06T09:14:19.832: fix: address code review comments from self-review
