@@ -58,3 +58,4 @@
 # 2025-11-09T13:07:42.894: feat(admin): implement driver management page
 # 2025-11-09T15:44:29.311: fix(admin): correct data fetching on user table mount
 # 2025-11-10T08:33:47.628: feat(website): initialize Next.js 14 customer website
+# 2025-11-10T10:07:23.195: feat(website): add home page with hero section
