@@ -57,3 +57,4 @@
 # 2025-11-09T10:38:15.467: feat(admin): add user management table with pagination
 # 2025-11-09T13:07:42.894: feat(admin): implement driver management page
 # 2025-11-09T15:44:29.311: fix(admin): correct data fetching on user table mount
+# 2025-11-10T08:33:47.628: feat(website): initialize Next.js 14 customer website
