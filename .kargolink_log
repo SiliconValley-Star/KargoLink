@@ -65,3 +65,4 @@
 # 2025-11-11T08:19:02.751: feat(website): build order tracking page with form
 # 2025-11-11T09:47:38.194: feat(website): integrate real-time tracking status display
 # 2025-11-11T11:23:15.867: feat(website): add WebSocket client for live updates
+# 2025-11-11T13:08:44.529: fix(website): resolve hydration mismatch on tracking page
