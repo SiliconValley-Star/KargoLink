@@ -68,3 +68,4 @@
 # 2025-11-11T13:08:44.529: fix(website): resolve hydration mismatch on tracking page
 # 2025-11-11T15:34:27.083: feat(website): add cargo not found error state UI
 # 2025-11-11T17:51:03.412: chore(website): add lighthouse CI configuration
+# 2025-11-12T09:02:18.736: feat(mobile): initialize Expo project with TypeScript template
