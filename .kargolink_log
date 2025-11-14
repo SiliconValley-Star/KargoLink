@@ -77,3 +77,4 @@
 # 2025-11-13T12:52:43.718: fix(mobile): resolve map rendering flicker on Android devices
 # 2025-11-13T15:19:26.304: feat(mobile): add cargo status timeline component
 # 2025-11-14T08:27:54.193: feat(mobile): implement carrier dashboard home screen
+# 2025-11-14T10:14:39.677: feat(mobile): add active delivery list for carrier view
