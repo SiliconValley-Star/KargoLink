@@ -80,3 +80,4 @@
 # 2025-11-14T10:14:39.677: feat(mobile): add active delivery list for carrier view
 # 2025-11-14T12:41:18.042: feat(mobile): implement cargo pickup confirmation flow
 # 2025-11-14T14:58:03.815: fix(mobile): fix expo-location permission request on iOS
+# 2025-11-14T17:13:47.268: feat(mobile): send GPS location updates to backend WebSocket
