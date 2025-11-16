@@ -82,3 +82,4 @@
 # 2025-11-14T14:58:03.815: fix(mobile): fix expo-location permission request on iOS
 # 2025-11-14T17:13:47.268: feat(mobile): send GPS location updates to backend WebSocket
 # 2025-11-16T10:51:29.534: refactor(shared): consolidate utility functions into shared package
+# 2025-11-16T13:22:06.879: refactor(shared): extract date formatting helpers
