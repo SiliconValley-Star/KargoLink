@@ -88,3 +88,4 @@
 # 2025-11-17T09:44:23.808: feat(ci): add automated test step for backend on push
 # 2025-11-17T11:19:48.172: feat(ci): add lint and type-check steps
 # 2025-11-17T13:06:35.594: fix(ci): resolve pnpm cache step failing on Ubuntu runner
+# 2025-11-17T15:33:12.047: feat(ci): add deployment workflow for production
