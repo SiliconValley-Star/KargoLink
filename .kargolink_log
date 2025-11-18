@@ -90,3 +90,4 @@
 # 2025-11-17T13:06:35.594: fix(ci): resolve pnpm cache step failing on Ubuntu runner
 # 2025-11-17T15:33:12.047: feat(ci): add deployment workflow for production
 # 2025-11-17T17:48:29.763: chore(ci): add badge to README for CI status
+# 2025-11-18T09:08:44.316: chore(docker): add production docker-compose configuration
