@@ -93,3 +93,4 @@
 # 2025-11-18T09:08:44.316: chore(docker): add production docker-compose configuration
 # 2025-11-18T11:27:19.852: chore(docker): configure multi-stage Dockerfile for backend
 # 2025-11-18T13:55:03.671: chore(docker): add nginx reverse proxy configuration
+# 2025-11-18T16:22:38.489: docs: add DEPLOYMENT.md with production setup guide
