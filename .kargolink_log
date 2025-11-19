@@ -97,3 +97,4 @@
 # 2025-11-19T08:37:15.924: feat(backend): add HTTPS enforcement in production mode
 # 2025-11-19T10:04:52.317: feat(backend): implement helmet.js security headers
 # 2025-11-19T11:48:29.803: feat(backend): add CSRF protection middleware
+# 2025-11-19T14:11:06.558: docs: add SECURITY-NOTES.md with vulnerability disclosure policy
