@@ -104,3 +104,4 @@
 # 2025-11-20T14:16:49.063: perf(mobile): reduce bundle size by lazy loading map component
 # 2025-11-20T16:44:22.538: chore: update all packages to latest stable versions
 # 2025-11-21T09:34:08.761: feat(tests): add k6 load testing scripts for cargo endpoints
+# 2025-11-21T11:58:35.214: feat(tests): add load test scenario for WebSocket connections
