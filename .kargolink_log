@@ -108,3 +108,4 @@
 # 2025-11-21T14:27:53.489: docs: add SYSTEM_INTEGRATION_TEST_REPORT with load test results
 # 2025-11-22T10:09:27.136: fix(backend): resolve memory leak in WebSocket connection pool
 # 2025-11-22T11:43:52.608: fix(mobile): fix crash on rapid screen navigation
+# 2025-11-22T14:02:18.953: fix(website): correct broken link in navigation menu
