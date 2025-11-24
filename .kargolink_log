@@ -110,3 +110,4 @@
 # 2025-11-22T11:43:52.608: fix(mobile): fix crash on rapid screen navigation
 # 2025-11-22T14:02:18.953: fix(website): correct broken link in navigation menu
 # 2025-11-22T16:31:45.287: chore: final cleanup before MVP submission
+# 2025-11-24T08:44:23.157: docs: finalize CARGOLINK_DEVELOPER_GUIDE with architecture overview
